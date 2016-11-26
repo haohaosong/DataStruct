@@ -5,7 +5,7 @@ using namespace std;
 /*递归的空间复杂度：递归的深度*/
 
 /*时间复杂度：O(logN)*/
-/*空间复杂度：:1*/
+/*空间复杂度：:O(logN)*/
 /*int BinaryResearch(int *arr,int left,int right,int find)
 {
 	while(left <= right)
