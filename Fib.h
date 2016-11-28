@@ -23,10 +23,10 @@ long long Fib(long long n)
 {
 	if(n<2)
 		return n;
-	int frist = 0;
-	int second = 1;
-	int third = 0;
-	for(long long i=2; i<=n; ++i)
+	long long frist = 0;
+	long long second = 1;
+	long long third = 0;
+	for(long long i = 2; i<=n; ++i)
 	{
 		third = frist+second;
 		frist = second;
