@@ -8,17 +8,17 @@ using namespace std;
 
 
 /*递归
-/*时间复杂度:2^N*/
-/*空间复杂度:N*/
-/*
+/*时间复杂度:O(2^N)*/
+/*空间复杂度:O(N)*/
+
 long long Fib(long long  n)
 {
 	return (n < 2) ? n : (Fib(n-1) + Fib(n-2));
 }
 
-/*时间复杂度:N*/
-/*空间复杂度:1*/
-/*
+/*时间复杂度:O(N)*/
+/*空间复杂度:O(1)*/
+
 long long Fib(long long n)
 {
 	if(n<2)
@@ -33,7 +33,7 @@ long long Fib(long long n)
 		second = third;
 	}
 	return third;
-}*/
+}
 
 void FunTest()
 {

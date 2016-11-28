@@ -6,7 +6,7 @@ using namespace std;
 
 /*时间复杂度：O(logN)*/
 /*空间复杂度：:O(logN)*/
-/*int BinaryResearch(int *arr,int left,int right,int find)
+int BinaryResearch(int *arr,int left,int right,int find)
 {
 	while(left <= right)
 	{
@@ -25,7 +25,7 @@ using namespace std;
 		i}
 	}
 	return -1;
-}*/
+}
 
 /*时间复杂度:O(logN)*/
 /*空间复杂度:O(N)*/
