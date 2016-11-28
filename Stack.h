@@ -1,3 +1,8 @@
+/*
+* author:haohaosong
+* date:2016/11/27
+*/ 
+
 #pragma once
 
 #include<iostream>
@@ -68,3 +73,20 @@ protected:
 		}
 	}
 };
+
+void FunTest()
+{
+	Stack<int> s;
+	s.Push(1);
+	s.Push(2);
+	s.Push(3);
+	s.Push(4);
+	
+	while (!s.Empty())
+	{
+		cout << s.Top() << " ";
+		s.Pop();
+	}
+	cout << endl;
+}
+

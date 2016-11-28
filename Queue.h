@@ -1,3 +1,8 @@
+/*
+* author:haohaosong
+* date:2016/11/27
+*/ 
+
 #pragma once
 
 #include<iostream>
@@ -106,3 +111,20 @@ protected:
 	Node*_head;
 	Node* _tial;
 };
+
+void TestQueue()
+{
+	Queue<int> q;
+	q.Push(1);
+	q.Push(2);
+	q.Push(3);
+	q.Push(4);
+
+	while (!q.Empty())
+	{
+		cout << q.Front() << " ";
+		q.Pop();
+	}
+
+	cout << endl;
+}
