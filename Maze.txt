@@ -1,3 +1,10 @@
+/*
+* author:haohaosong
+* date:2016/11/30
+* note:This file need a hear file to use while name is Maze.h.
+*   In addition,you should delete the note.If not,you will make mistake
+*/
+
 1 1 1 1 1 1 1 1 1 1
 1 1 1 1 1 1 1 1 1 1
 0 0 0 1 1 1 1 1 1 1

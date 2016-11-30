@@ -1,3 +1,9 @@
+/*
+* author:haohaosong
+* date:2016/11/30
+* note:This head file need the file name with maze.txt.
+*   You can made a new file or cpoy the file form my repository
+*/
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include<iostream>
