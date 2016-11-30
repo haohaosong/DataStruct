@@ -64,6 +64,9 @@ void GetMaze(int *maze, size_t N)
 	}
 }
 
+/*
+* The method of not recursive
+*/
 bool GetMazePath(int *maze, size_t n, Pos entry, stack<Pos>&path)
 {
 	maze[entry._row*N + entry._col] = 2;
@@ -122,6 +125,9 @@ bool GetMazePath(int *maze, size_t n, Pos entry, stack<Pos>&path)
 	return false;
 }
 
+/*
+* The method of recursive
+*/
 void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path)
 {
 	if (entry._row == N - 1)
@@ -170,7 +176,10 @@ void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path)
 	next = cur;
 }
 
-void ReMaze(int* maze)
+/*
+* Reset the maze 
+*/
+void ReMaze(int* maze，size_t N)
 {
 	for (size_t i = 0; i < N; ++i)
 	{
@@ -199,7 +208,7 @@ void TestMaze()
 			{
 				MinPath = path;
 			}
-			ReMaze((int*)maze);
+			ReMaze((int*)maze,N);
 			maze[path.top()._row][path.top()._col] = 1;//将上次的出口改为1
 			path = empty;
 		}
