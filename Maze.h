@@ -4,6 +4,7 @@
 * note:This head file need the file name with maze.txt.
 *   You can made a new file or cpoy the file form my repository
 */
+
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include<iostream>
@@ -39,6 +40,20 @@ bool CheckIsAccess(int *maze, size_t N, Pos next)
 	return false;
 }
 
+bool CheckIsAccess(int *maze, size_t N, Pos next, Pos cur)
+{
+	if (next._row < 0 || next._row >= N || next._col < 0 || next._col >= N)
+	{
+		return false;
+	}
+
+	if (maze[next._row*N + next._col] == 0 )
+	{
+		return true;
+	}
+	return (maze[next._row*N + next._col] > (maze[cur._row*N + cur._col] + 1));
+}
+
 void GetMaze(int *maze, size_t N)
 {
 	FILE *fp = fopen("1.txt","r");
@@ -64,13 +79,10 @@ void GetMaze(int *maze, size_t N)
 	}
 }
 
-/*
-* The method of not recursive
-*/
 bool GetMazePath(int *maze, size_t n, Pos entry, stack<Pos>&path)
 {
 	maze[entry._row*N + entry._col] = 2;
-	Pos cur,next;
+	Pos cur, next;
 	cur = entry;
 	path.push(entry);
 	while (!path.empty())
@@ -125,22 +137,19 @@ bool GetMazePath(int *maze, size_t n, Pos entry, stack<Pos>&path)
 	return false;
 }
 
-/*
-* The method of recursive
-*/
 void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path)
 {
 	if (entry._row == N - 1)
 	{
 		return;
 	}
-	Pos cur,next;
+	Pos cur, next;
 	cur = entry;
 
 	next = cur;
 
 	next._row += 1;
-	if (CheckIsAccess((int*)maze,N,next) ==  true)
+	if (CheckIsAccess((int*)maze, N, next) == true)
 	{
 		path.push(next);
 		maze[next._row*N + next._col] = 2;
@@ -163,23 +172,70 @@ void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path)
 		path.push(next);
 		maze[next._row*N + next._col] = 2;
 		GetMazePath_R(maze, N, next, path);
+		next = cur;
+
+		next._col -= 1;
+		if (CheckIsAccess((int*)maze, N, next) == true)
+		{
+			path.push(next);
+			maze[next._row*N + next._col] = 2;
+			GetMazePath_R(maze, N, next, path);
+		}
+		next = cur;
 	}
+}
+void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path, stack<Pos>&shortpath)
+{
+	if (entry._row == N - 1)
+	{
+		if (path.size() < shortpath.size() || shortpath.size() == 0)
+		{
+			shortpath = path;
+		}
+		path.pop();
+		return;
+	}
+	Pos cur, next;
+	cur = entry;
 	next = cur;
 
-	next._col -= 1;
-	if (CheckIsAccess((int*)maze, N, next) == true)
+	next._row += 1;
+	if (CheckIsAccess((int*)maze, N, next, cur) == true)
 	{
 		path.push(next);
-		maze[next._row*N + next._col] = 2;
-		GetMazePath_R(maze, N, next, path);
+		maze[next._row*N + next._col] = maze[cur._row*N + cur._col] + 1;
+		GetMazePath_R(maze, N, next, path, shortpath);
 	}
 	next = cur;
-}
 
-/*
-* Reset the maze 
-*/
-void ReMaze(int* maze，size_t N)
+	next._row -= 1;
+	if (CheckIsAccess((int*)maze, N, next, cur) == true)
+	{
+		path.push(next);
+		maze[next._row*N + next._col] = maze[cur._row*N + cur._col] + 1;
+		GetMazePath_R(maze, N, next, path, shortpath);
+	}
+	next = cur;
+
+	next._col += 1;
+	if (CheckIsAccess((int*)maze, N, next, cur) == true)
+	{
+		path.push(next);
+		maze[next._row*N + next._col] = maze[cur._row*N + cur._col] + 1;
+		GetMazePath_R(maze, N, next, path, shortpath);
+	}
+	
+	next = cur;
+	next._col -= 1;
+	if (CheckIsAccess((int*)maze, N, next, cur) == true)
+	{
+		path.push(next);
+		maze[next._row*N + next._col] = maze[cur._row*N + cur._col] + 1;
+		GetMazePath_R(maze, N, next, path, shortpath);
+	}
+	path.pop();
+}
+void ReMaze(int* maze)
 {
 	for (size_t i = 0; i < N; ++i)
 	{
@@ -193,30 +249,49 @@ void ReMaze(int* maze，size_t N)
 	}
 }
 
+/*
+* note:this method has the bug when the rode has a circle
+*		however,the method while name is 
+*		"void GetMazePath_R(int *maze, size_t N, Pos entry, stack<Pos>&path, stack<Pos>&shortpath)" 
+*		can slove this problem
+*/
+
+stack<Pos> MinPath()
+{
+	int maze[N][N] = { 0 };
+	int curmaze[N][N] = { 0 }; 
+	GetMaze((int*)maze, N);
+	stack<Pos> path,MinPath,empty;
+	
+	while (GetMazePath((int*)maze, N, { 2, 0 }, path))
+	{
+		if (path.size() < MinPath.size()||MinPath.size() == 0)
+		{
+			MinPath = path;
+		}
+		ReMaze((int*)maze);
+		maze[path.top()._row][path.top()._col] = 1;//将上次的出口改为1
+		path = empty;
+	}
+	return MinPath;
+}
+/*
+* note:the example of how to use GetMazePath_R to seek the short path.
+*/
 void TestMaze()
 {
 	try
 	{
 		int maze[N][N] = { 0 };
-		int curmaze[N][N] = { 0 }; 
+		int curmaze[N][N] = { 0 };
 		GetMaze((int*)maze, N);
-		stack<Pos> path,MinPath,empty;
-		
-		while (GetMazePath((int*)maze, N, { 2, 0 }, path))
-		{
-			if (path.size() < MinPath.size()||MinPath.size() == 0)
-			{
-				MinPath = path;
-			}
-			ReMaze((int*)maze,N);
-			maze[path.top()._row][path.top()._col] = 1;//将上次的出口改为1
-			path = empty;
-		}
-		cout << "Min path:" << MinPath.size() << endl;
+		stack<Pos> path, shortpath;
+		path.push({2,0});
+		GetMazePath_R((int*)maze, N, { 2, 0 },path, shortpath);
+		cout << shortpath.size() << endl;
 	}
 	catch (exception &e)
 	{
 		cout << e.what() << endl;
 	}
 }
-
