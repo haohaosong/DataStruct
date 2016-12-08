@@ -1,8 +1,7 @@
 /*
-* author:haohaosong 
-* date:2016/12/7 
+* author:haohaosong
+* date:2016/12/7
 */ 
-
 #pragma once 
 
 #include<assert.h>
@@ -25,9 +24,9 @@ public:
 	{
 		_finish = _start + v.Size();
 		_endOfStorage = _start + v.Size();
-		if (TypeTraits<T>::TypeTraits().Get())
+		if (TypeTraits<T>::IsPODType().Get())
 		{
-			memcpy(_start, v._start, sizeof(T)*size);
+			memcpy(_start, v._start, sizeof(T)*v.Size());
 		}
 		else
 		{
@@ -37,9 +36,15 @@ public:
 			}
 		}
 	}
+	void swap(Vector<T> v)
+	{
+		std::swap(v._endOfStorage, _endOfStorage);
+		std::swap(v._finish, _finish);
+		std::swap(v._start, _start);
+	}
 	Vector<T>& operator=(Vector<T> v)
 	{
-		std::swap(*this, v);
+		swap(v);
 		return *this;
 	}
 	void PushBack(const T& x)
@@ -108,7 +113,7 @@ public:
 		}
 		size_t size = Size();
 		size_t capacity = Capacity();
-		if (sz > capacity)//需要重新开辟空间
+		if (sz > capacity)
 		{
 			size_t newcapacity = sz;
 			Iterator tmp = new T[newcapacity];
@@ -260,3 +265,4 @@ struct TypeTraits<char>
 {
 	typedef __TrueType IsPODType;
 };
+
