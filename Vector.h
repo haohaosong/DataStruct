@@ -13,6 +13,7 @@ class Vector
 {
 public:
 	typedef T* Iterator;
+	typedef const T* ConstIterator;
 public:
 	Vector()
 		:_start(0)
@@ -139,7 +140,7 @@ public:
 				cur++;
 			}
 		}
-		else//不需要开辟空间
+		else
 		{
 			Iterator cur = _finish;
 			_finish = _start + sz;
@@ -186,7 +187,15 @@ public:
 	{
 		return _start;
 	}
+	ConstIterator Front()const
+	{
+		return _start;
+	}
 	Iterator Back()
+	{
+		return _finish;
+	}
+	ConstIterator Back()const
 	{
 		return _finish;
 	}
