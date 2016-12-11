@@ -1,7 +1,7 @@
 /*
 * author:haohaosong
 * date:2016/12/11
-*/ 
+*/
 #pragma once 
 
 #include<iostream>
