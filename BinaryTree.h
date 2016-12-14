@@ -207,21 +207,24 @@ protected:
 };
 
 void TestBinaryTree()
-{
-	int arr[10] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };*/
-	int arr[] = { 1, 2, '#', 3, '#','#', 4,5, '#', 6 ,'#', 7,'#','#',8};
-	BinaryTree<int> t(arr,sizeof(arr)/sizeof(arr[0]),'#');
-	BinaryTree<int> t2(t);*/
-	t.InOrder();
-	t.PostOrder();*/
-	t.PrevOrder();
-	cout << t.Size() << endl;
-	cout << t.Depth() << endl;
-	cout << t.GetLeafSize() << endl;
-	cout << t.GetKLevelSize(2) << endl;*/
-	t.LevelOrder();
+{	
+	int arr[10] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	//int arr[] = { 1, 2, '#', 3, '#','#', 4,5, '#', 6 ,'#', 7,'#','#',8};
+	BinaryTree<int> t1(arr,sizeof(arr)/sizeof(arr[0]),'#');
+	t1.InOrder();
+	t1.PostOrder();
+	t1.PrevOrder();
+
+	t1.LevelOrder();
+	cout << t1.Size() << endl;
+	cout << t1.Depth() << endl;
+	cout << t1.GetLeafSize() << endl;
+	cout << t1.GetKLevelSize(2) << endl;
+	
+	BinaryTree<int> t2(t);
+	t2.LevelOrder();
+	
 	BinaryTree<int> t3;
 	t3 = t;
 	t3.PrevOrder();
-	t2.LevelOrder();
 }
