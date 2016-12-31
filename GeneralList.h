@@ -1,12 +1,15 @@
 /*
 * author:haohaosong
 * date:2016/12/11
+* note:广义表 
 */
 #pragma once 
 
 #include<iostream>
 using namespace std;
 #include<assert.h>
+
+//定义一个枚举类型，用于判断是头还是值，还是有子链 
 enum Type
 {
 	HEAD,
@@ -14,6 +17,7 @@ enum Type
 	SUB,
 };
 
+//定义广义表的结果体 
 struct GeneralNode
 {
 	Type _type;
@@ -35,10 +39,13 @@ struct GeneralNode
 	}
 };
 
+//定义广义表 
 class GeneralList
 {
+	//类型重命名 
 	typedef GeneralNode Node;
 public:
+	//构造方法 
 	GeneralList()
 	{
 		_head = new Node(HEAD);
@@ -47,10 +54,14 @@ public:
 	{
 		_head = _CreatList(s);
 	}
+	
+	//拷贝构造函数 
 	GeneralList(const GeneralList& g)
 	{
 		_head = _Copy(g._head);
 	}
+	
+	//赋值运算符重载 
 	GeneralList& operator=(GeneralList &g)
 	{
 		if (this != &g)
@@ -60,6 +71,8 @@ public:
 		}
 		return *this;
 	}
+	
+	//析构函数 
 	~GeneralList()
 	{
 		Destory();
@@ -70,6 +83,8 @@ public:
 		_Print(_head);
 		cout << endl;
 	}
+	
+	//求深度，节点个数 
 	size_t Size()
 	{
 		return _Size(_head);
@@ -84,6 +99,8 @@ public:
 	}
 protected:
 	Node* _head;
+protected:
+	//Create调用_Create 
 	Node* _CreatList(const char *& s)
 	{
 		assert(s);
@@ -116,6 +133,8 @@ protected:
 		}
 		return newhead;
 	}
+	
+	//判断是不是值 
 	bool _IsValue(char ch)
 	{
 		if ((ch >= '0'&&ch <= '9')
@@ -126,6 +145,8 @@ protected:
 		}
 		return false;
 	}
+	
+	//Print调用_Print
 	void _Print(Node *head)
 	{
 		assert(head && head->_type == HEAD);
@@ -151,6 +172,8 @@ protected:
 		}
 		cout << ')';
 	}
+	
+	//Size调用 _Size() 
 	size_t _Size(Node* head)
 	{
 		assert(head && head->_type == HEAD);
@@ -166,6 +189,8 @@ protected:
 		}
 		return count;
 	}
+	
+	//Depth调用_Depth 
 	size_t _Depth(Node* head)
 	{
 		assert(head && head->_type == HEAD);
@@ -184,6 +209,8 @@ protected:
 		}
 		return maxdepth;
 	}
+	
+	//Copy调用_Copy 
 	Node* _Copy(Node* head)
 	{
 		assert(head&&head->_type == HEAD);
@@ -192,17 +219,18 @@ protected:
 		Node* cur = head->next;
 		while (cur)
 		{
-			if (cur->_type == SUB)
+			if (cur->_type == SUB)//生成一个SUB节点 
 			{
 				Node* newnode = new Node(SUB);
 				newnode->_SubLink = _Copy(cur->_SubLink);
 				tail->next = newnode;
 			}
-			else if (cur->_type == VALUE)
+			else if (cur->_type == VALUE)//生成一个值节点 
 				tail->next = new Node(VALUE, cur->_value);
 			else
 				assert(false);
-
+			
+			//分别指向下一个 
 			cur = cur->next;
 			tail = tail->next;
 		}
@@ -214,8 +242,11 @@ protected:
 		Node* cur = head;
 		while (cur)
 		{
+			//用cur记录下一个节点 
 			Node* del = cur;
 			cur = cur->next;
+			
+			//递归删除一个链 
 			if (del->_type == SUB)
 				_Destory(del->_SubLink);
 			
@@ -225,6 +256,7 @@ protected:
 	}
 };
 
+//测试函数 
 void TestGeneral()
 {
 	GeneralList g1("(a,b,(c,d))");
