@@ -5,7 +5,7 @@
 */
 
 #pragma once 
-
+#include<assert.h> 
 #include<iostream>
 using namespace std;
 
@@ -35,6 +35,7 @@ public:
 	~ResearchBinaryTree()
 	{
 		Destory(_root);
+		_root = NULL; 
 	}
 
 	bool Insert(const K& key)
