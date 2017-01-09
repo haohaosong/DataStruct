@@ -1,7 +1,7 @@
 /*
 * author:haohaosong
 * date:2017/1/1
-* note:文件压缩小项目，初稿 
+* note:文件压缩小项目 
 */ 
 
 #pragma once
@@ -66,7 +66,7 @@ public:
 		char ch = fgetc(fout);
 		while (ch != EOF)
 		{
-			_infos[ch]._count++;
+			_infos[(unsigned char)ch]._count++;
 			ch = fgetc(fout);
 		}
 
@@ -74,7 +74,7 @@ public:
 		CharInfo invalid;
 		invalid._count = 0;
 		HuffmanTree<CharInfo> huff(_infos,256,invalid);
-		
+
 		//生成哈弗曼编码
 		GetHuffmanCode(huff.GerRoot());
 
@@ -90,7 +90,7 @@ public:
 		int i = 0;
 		while (ch != EOF)
 		{
-			string& code = _infos[ch]._code;
+			string& code = _infos[(unsigned char)ch]._code;
 			while (pos<8)
 			{
 				value <<= 1;
@@ -172,7 +172,66 @@ public:
 
 	//解压缩
 	void Uncompress(const char* filename)
-	{}
+	{
+		assert(filename);
+		string unCompressFile = filename;
+		size_t thePos = unCompressFile.find_last_of('.');
+		unCompressFile.resize(thePos);
+		unCompressFile += ".unhuff";
+
+		FILE* fout = fopen(filename,"r");
+		assert(fout);
+
+		FILE* fin = fopen(unCompressFile.c_str(), "w");
+		assert(fin);
+
+		CharInfo invalid;
+		invalid._count = 0;
+		HuffmanTree<CharInfo> huff(_infos, 256, invalid);
+		
+		//总的字符个数等于根节点的的count
+		size_t allCount = huff.GerRoot()->_weight._count;
+		
+		//获取Huffman树的根节点，以便每次用根节点开始
+		const HuffmanTreeNode<CharInfo>* root = huff.GerRoot();
+		HuffmanTreeNode<CharInfo>* cur = const_cast<HuffmanTreeNode<CharInfo>*>(root);
+		
+		int pos = 7;
+		char ch = fgetc(fout);
+		while (ch != EOF)
+		{
+			//取出要判别的位，并判断是0还是1
+			if ((ch >> pos) & 1)
+				cur = cur->_right;
+			else
+				cur = cur->_left;
+
+			//如果读到根节点，重置cur，并进行写入
+			if (cur->_left == NULL && cur->_right == NULL)
+			{
+				allCount--; 
+				fputc(cur->_weight._ch, fin);
+				cur = const_cast<HuffmanTreeNode<CharInfo>*>(root);
+
+				//allCount用来判断字符是否写完
+				if (allCount == 0)
+					break;
+			}
+
+			//读到最后一位，写入，并且读下一个字符
+			if (pos == 0)
+			{
+				ch = fgetc(fout);
+				pos = 7;
+			}
+			else
+			{
+				pos--;
+			}
+		}
+		fclose(fin);
+		fclose(fout);
+	}
 
 	//得到哈弗曼编码
 	void GetHuffmanCode(const Node* root)
@@ -185,7 +244,7 @@ public:
 		if (root->_left == NULL && root->_right == NULL)
 		{
 			//利用引用，减少拷贝的开销
-			string& code = _infos[root->_weight._ch]._code;
+			string& code = _infos[(unsigned char)root->_weight._ch]._code;
 
 			//获取huffman编码，并记录在根节点上
 			Node* parent = root->_parent;
@@ -219,4 +278,5 @@ void TestFileCompress()
 {
 	FileCompress f;
 	f.Compress("input.txt");
+	f.Uncompress("input.txt.huff");
 }
