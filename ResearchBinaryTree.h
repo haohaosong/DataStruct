@@ -9,24 +9,27 @@
 #include<iostream>
 using namespace std;
 
-template<typename T>
+template<typename K,typename V>
 struct ResearchBinaryTreeNode
 {
-	ResearchBinaryTreeNode<T>* _left;
-	ResearchBinaryTreeNode<T>* _right;
-	T _key;
+	ResearchBinaryTreeNode<K, V>* _left;
+	ResearchBinaryTreeNode<K, V>* _right;
 
-	ResearchBinaryTreeNode(const T& key)
+	K _key;
+	V _value;
+
+	ResearchBinaryTreeNode(const K& key,const V& value)
 		:_key(key)
+		, _value(value)
 		, _left(NULL)
 		, _right(NULL)
 	{}
 };
 
-template<typename K>
+template<typename K,typename V>
 class ResearchBinaryTree
 {
-	typedef ResearchBinaryTreeNode<K> Node;
+	typedef ResearchBinaryTreeNode<K,typename V> Node;
 public:
 	ResearchBinaryTree()
 		:_root(NULL)
@@ -38,11 +41,11 @@ public:
 		_root = NULL; 
 	}
 
-	bool Insert(const K& key)
+	bool Insert(const K& key,const V& value)
 	{
 		if (_root == NULL)
 		{
-			_root = new Node(key);
+			_root = new Node(key，value);
 			return true;
 		}
 
@@ -64,9 +67,9 @@ public:
 
 		//parent为需要插入节点的父亲节点
 		if (parent->_key > key)
-			parent->_left = new Node(key);
+			parent->_left = new Node(key,value);
 		else if (parent->_key<key)
-			parent->_right = new Node(key);
+			parent->_right = new Node(key,value);
 
 		return true;
 	}
