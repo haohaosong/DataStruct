@@ -182,7 +182,100 @@ public:
 		_InOrder(_root);
 		cout << endl;
 	}
+	
+	Node* FindR(const K& key)
+	{
+		return _FindR(_root, key);
+	}
+
+	bool InsertR(const K& key, const V& value)
+	{
+		return _InsertR(_root, key, value);
+	}
+
+	bool RemoveR(const K&key)
+	{
+		return _RemoveR(_root, key);
+	}
 protected:
+	bool _RemoveR(Node* root,const K& key)
+	{
+		if (root == NULL)
+			return false;
+
+		//递归，找到要删除的节点
+		if (root->_key < key)
+			return _RemoveR(root->_right, key);
+		else if (root->_key > key)
+			return _RemoveR(root->_left, key);
+		else
+		{
+			Node* delNode = root;
+
+			//删除节点的左为空
+			if (root->_left == NULL)
+				root = root->_right; 
+			else if (root->_right == NULL)
+				root = root->_left;
+			else//左右都不为空的情况
+			{
+				Node* parent = root;
+				Node* subLeft = root->_right;
+
+				while (subLeft->_left)
+				{
+					parent = subLeft;
+					subLeft = subLeft->_left;
+				}
+
+				delNode = subLeft;
+
+				//若为左子树，代表走了while循环，否则没有走循环
+				//要删除的节点是subLeft
+
+				root->_key = subLeft->_key;
+
+				if (parent->_left == subLeft)
+					parent->_left = subLeft->_right;
+				else
+					parent->_right = subLeft->_right;
+
+				delete delNode;
+				return true;
+			}
+		}
+	}
+
+	bool _InsertR(Node*& root, const K& key, const V& value)
+	{
+		//构建新节点
+		if (root == NULL)
+		{
+			root = new Node(key, value);
+			return true;
+		}
+		
+		if (key < root->_key)
+			return _InsertR(root->_left, key, value);
+		else if (key > root->_key)
+			return _InsertR(root->_right, key, value);
+		else
+			return false;
+	}
+
+	Node* _FindR(Node* root, const K& key)
+	{
+		if (root == NULL)
+			return NULL;
+
+		if (key < root->_key)
+			return _FindR(root->_left, key);
+		else if (key>root->_key)
+			return _FindR(root->_right, key);
+		else
+			return root;
+	}
+	
 	void Destory(Node* root)
 	{
 		if (root == NULL)
