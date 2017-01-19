@@ -76,18 +76,19 @@ public:
 			else
 				parent->_bf += 1;
 
+			//平衡因子为0，不用向上更新 
 			if (parent->_bf == 0)
 			{
 				break;
 			}
 			else if (parent->_bf == 1
-				|| parent->_bf == -1)
+				|| parent->_bf == -1)//从0变到1或-1，还需继续向上更新 
 			{
 				cur = parent;
 				parent = parent->_parent;
 			}
 			else if (parent->_bf == 2
-				|| parent->_bf == -2)
+				|| parent->_bf == -2)//2或-2，进行旋转 
 			{
 				if (parent->_bf == 2)
 				{
@@ -108,7 +109,7 @@ public:
 
 				break;
 			}
-			else
+			else//-3或者3 
 			{
 				cout << "平衡因子异常" << endl;
 				assert(false);
@@ -344,6 +345,5 @@ void TestAVL()
 	t.Insert(6, 0);
 	t.Insert(7, 0);
 	t.Insert(8, 0);
-	
 	t.InOrder(); 
 }
