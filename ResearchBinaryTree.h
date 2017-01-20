@@ -29,7 +29,7 @@ struct ResearchBinaryTreeNode
 template<typename K,typename V>
 class ResearchBinaryTree
 {
-	typedef ResearchBinaryTreeNode<K,typename V> Node;
+	typedef ResearchBinaryTreeNode<K,V> Node;
 public:
 	ResearchBinaryTree()
 		:_root(NULL)
@@ -45,7 +45,7 @@ public:
 	{
 		if (_root == NULL)
 		{
-			_root = new Node(key£¬value);
+			_root = new Node(key,value);
 			return true;
 		}
 
