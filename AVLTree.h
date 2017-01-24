@@ -320,7 +320,7 @@ protected:
 		size_t rightDepth = 0;
 
 		if (_IsBalanceOP(root->_left,leftDepth)
-			&& _IsBalanceOP(root->_right,rightDepth)
+			&& _IsBalanceOP(root->_right,rightDepth)) 
 		{
 				depth = leftDepth > rightDepth ? leftDepth + 1 : rightDepth + 1;
 				return (leftDepth - rightDepth) < 2;
