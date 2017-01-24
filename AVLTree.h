@@ -1,3 +1,8 @@
+/*
+* author:haohaosong
+* date:2017/1/24
+* note:平衡二叉树的实现 
+*/
 #pragma once
 
 #include<assert.h>
@@ -60,18 +65,18 @@ public:
 				return false;
 		}
 
-		Node* newNode = new Node(key, value);
+		cur = new Node(key, value);
 		if (parent->_key > key)
-			parent->_left = newNode;
+			parent->_left = cur;
 		else
-			parent->_right = newNode;
+			parent->_right = cur;
 
-		newNode->_parent = parent;
+		cur->_parent = parent;
 
 		//更新平衡因子
 		while (parent)
 		{
-			if (parent->_left == newNode)
+			if (parent->_left == cur)
 				parent->_bf -= 1;
 			else
 				parent->_bf += 1;
@@ -96,12 +101,12 @@ public:
 						//左旋
 						RotateL(parent);
 					else
-						RotateRL(parent); 
+						RotateRL(parent);
 				}
 				else
 				{
 					if (cur->_bf == 1)
-						RotateLR(parent); 
+						RotateLR(parent);
 					else
 						//右旋
 						RotateR(parent);
@@ -142,7 +147,7 @@ public:
 	bool IsBalanceOP()
 	{
 		size_t depth = 0;
-		return _IsBalanceOP(_root,depth);
+		return _IsBalanceOP(_root, depth);
 	}
 
 	//左旋
@@ -187,7 +192,7 @@ public:
 
 		parent->_left = subLR;
 		if (subLR)
-			subLR->_parent = parent; 
+			subLR->_parent = parent;
 
 		subL->_right = parent;
 		parent->_parent = subL;
@@ -209,7 +214,7 @@ public:
 
 		parent->_bf = subL->_bf = 0;
 	}
-	
+
 	//右左旋
 	void RotateRL(Node* parent)
 	{
@@ -232,7 +237,7 @@ public:
 		}
 		else
 		{
-			parent->_bf = subRL->_bf = 0;
+			parent->_bf = subR->_bf = 0;
 		}
 
 		subRL->_bf = 0;
@@ -260,7 +265,7 @@ public:
 		}
 		else
 		{
-			parent->_bf = subLR->_bf = 0;
+			parent->_bf = subL->_bf = 0;
 		}
 
 		subLR->_bf = 0;
@@ -300,8 +305,13 @@ protected:
 		if (root == NULL)
 			return true;
 
-		size_t leftDepth = _Depth(root->_left);
-		size_t rightDepth = _Depth(root->_right);
+		int leftDepth = _Depth(root->_left);
+		int rightDepth = _Depth(root->_right);
+
+		if (rightDepth - leftDepth != root->_bf)
+		{
+			cout << "平衡因子异常:" << root->_key << endl;
+		}
 
 		return abs(leftDepth - rightDepth) <= 1
 			&& _IsBalance(root->_left)
@@ -319,11 +329,11 @@ protected:
 		size_t leftDepth = 0;
 		size_t rightDepth = 0;
 
-		if (_IsBalanceOP(root->_left,leftDepth)
-			&& _IsBalanceOP(root->_right,rightDepth)) 
+		if (_IsBalanceOP(root->_left, leftDepth)
+			&& _IsBalanceOP(root->_right, rightDepth))
 		{
-				depth = leftDepth > rightDepth ? leftDepth + 1 : rightDepth + 1;
-				return (leftDepth - rightDepth) < 2;
+			depth = leftDepth > rightDepth ? leftDepth + 1 : rightDepth + 1;
+			return (leftDepth - rightDepth) < 2;
 		}
 		else
 		{
@@ -334,16 +344,26 @@ protected:
 	Node* _root;
 };
 
-void TestAVL()
+void TestAVLTree()
 {
-	AVLTree<int, int> t;
-	t.Insert(1, 0);
-	t.Insert(2, 0);
-	t.Insert(3, 0);
-	t.Insert(4, 0);
-	t.Insert(5, 0);
-	t.Insert(6, 0);
-	t.Insert(7, 0);
-	t.Insert(8, 0);
-	t.InOrder(); 
+	AVLTree<int, int> t1;
+	int a[] = { 16, 3, 7, 11, 9, 26, 18, 14, 15 };
+	for (int i = 0; i<(sizeof(a) / sizeof(a[0])); i++)
+	{
+		t1.Insert(a[i], i);
+	}
+	t1.InOrder();
+	cout << "IsBalance: " << t1.IsBalance() << endl;
+
+
+	AVLTree<int,int> t2;
+	int a[] = {	4, 2, 6, 1, 3, 5, 15, 7, 16, 14};
+	for(int i = 0; i<(sizeof(a)/sizeof(a[0])); i++)
+	{
+		t2.Insert(a[i],i);
+		cout<<"IsBalance: "<<t2.IsBalance()<<endl;
+	}  
+	t2.InOrder();
+	cout<<"IsBalance: "<<t2.IsBalance()<<endl;
+
 }
