@@ -292,3 +292,18 @@ protected:
 protected:
 	Node* _root;
 };
+
+void TestRBTree()
+{
+	int s[12] = { 2, 6, 1, 0, 3, 8, 11, 15, 10, 9, 4, 7 };
+	RBTree<int, int> rb;
+
+	for (size_t i = 0; i < sizeof(s) / sizeof(s[0]); ++i)
+	{
+		rb.Insert(s[i], 0);
+		cout << s[i] << " IsBalance:" << rb.IsBalance() << endl;
+	}
+
+	cout <<"IsBalance:" << rb.IsBalance() << endl;
+	rb.InOrder();
+}
