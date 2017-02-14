@@ -95,7 +95,7 @@ public:
 			if (parent == grandfather->_left)
 			{
 				Node* uncle = grandfather->_right;
-				//1.叔叔存在且为红
+				//1.叔叔存在且为红，变色
 				if (uncle && uncle->_col == RED)
 				{
 					parent->_col = uncle->_col = BLACK;
@@ -103,34 +103,31 @@ public:
 					cur = grandfather;
 					parent = cur->_parent;
 				}
-				else
+				else //叔叔不存在/叔叔存在且为黑
 				{
+					//2.进行单旋
 					if (cur == parent->_left)
 					{
 						RotateR(grandfather);
 
 						parent->_col = BLACK;
 						grandfather->_col = RED;
-						
-						cur = parent;
-						parent = parent->_parent;
 					}
-					else
+					else //3.进行双旋
 					{
 						RotateL(parent);
 						RotateR(grandfather);
 
 						cur->_col = BLACK;
 						grandfather->_col = RED;
-
-						parent = cur->_parent;
 					}
+					break;
 				}
 			}
 			else
 			{
 				Node* uncle = grandfather->_left;
-				//1.
+				//1.叔叔存在且为红，变色
 				if (uncle && uncle->_col == RED)
 				{
 					parent->_col = uncle->_col = BLACK;
@@ -138,28 +135,25 @@ public:
 					cur = grandfather;
 					parent = cur->_parent;
 				}
-				else
+				else //叔叔不存在/叔叔存在且为黑
 				{
+					//2.进行单旋
 					if (cur == parent->_right)
 					{
 						RotateL(grandfather);
 
 						parent->_col = BLACK;
 						grandfather->_col = RED;
-
-						cur = parent;
-						parent = cur->_parent;
 					}
-					else
+					else //3.进行双旋
 					{
 						RotateR(parent);
 						RotateL(grandfather);
 
 						cur->_col = BLACK;
 						grandfather->_col = RED;
-
-						parent = cur->_parent;
 					}
+					break;
 				}
 			}
 		}
@@ -167,7 +161,77 @@ public:
 		_root->_col = BLACK;
 		return true;
 	}
+
+	bool IsBalance()
+	{
+		//1.空树，属于红黑树
+		if (_root == NULL)
+			return true; 
+
+		//2.根节点不为黑
+		if (_root->_col != BLACK)
+			return false;
+
+		//3.统计出一条路径上黑色节点的数量
+		size_t k = 0;
+		Node* cur = _root;
+		while (cur)
+		{
+			if (cur->_col == BLACK)
+				k++;
+
+			cur = cur->_left;
+		}
+
+		return CheckColor(_root) && CheckBlackNum(_root, k, 0);
+	}
+
+	void InOrder()
+	{
+		_InOrder(_root);
+		cout << endl;
+	}
+
 protected:
+	void _InOrder(Node* root)
+	{
+		if (root == NULL)
+			return;
+
+		_InOrder(root->_left);
+		cout << root->_key << " ";
+		_InOrder(root->_right);
+	}
+	bool CheckColor(Node* root)
+	{
+		//1.空树，满足
+		if (root == NULL)
+			return true;
+
+		//2.判断父亲，是否是连续的红色
+		if (root->_col == RED && root->_parent->_col == RED)
+			return false;
+
+		return CheckColor(root->_left) && CheckColor(root->_right);
+	}
+
+	bool CheckBlackNum(Node* root, const size_t &k, size_t num)
+	{
+		//1.空树，满足
+		if (root == NULL)
+			return true;
+
+		if (root->_col == BLACK)
+			++num;
+
+		//2.叶子节点，判断黑色节点数量
+		if (root->_left == NULL && root->_right == NULL && num != k)
+			return false;
+
+		return CheckBlackNum(root->_left, k, num) 
+			&& CheckBlackNum(root->_right, k, num);
+	}
+
 	void RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
