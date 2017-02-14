@@ -68,8 +68,8 @@ protected:
 				tmp[idx] = _p[idx];
 			}
 			delete[] _p;
-		_p = tmp;
-		_capacity = NewCapacity;
+			_p = tmp;
+			_capacity = NewCapacity;
 		}
 	}
 };
