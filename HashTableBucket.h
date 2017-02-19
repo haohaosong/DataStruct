@@ -220,3 +220,17 @@ protected:
 		}
 	}
 };
+
+void TestHashTableBucket()
+{
+	HashTableBucket<int, int> hb(4);
+	hb.Insert(10, 0);
+	hb.Insert(20, 0);
+	hb.Insert(30, 0);
+	hb.Insert(40, 0);
+	hb.Insert(50, 0);
+	hb.Insert(60, 0);
+	hb.Insert(70, 0);
+
+	hb.Erase(10);
+}
