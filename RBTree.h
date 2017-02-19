@@ -4,17 +4,19 @@
 * author:haohaosong 
 * date:2017/2/13 
 * note:红黑树的实现 
-*/ 
+*/
 
 #include<iostream>
 using namespace std;
 
+//定义枚举Color,标示 红黑树的颜色 
 enum Color
 {
 	RED,
 	BLACK,
 };
 
+//定义一个红黑树的节点 
 template<typename K,typename V>
 struct RBTreeNode
 {
@@ -23,10 +25,12 @@ struct RBTreeNode
 
 	Color _col;
 
+	//这里实现的是三叉链 
 	RBTreeNode<K, V>* _left;
 	RBTreeNode<K, V>* _right;
 	RBTreeNode<K, V>* _parent;
 
+	//构造函数 
 	RBTreeNode(const K& key,const V& value)
 		: _key(key)
 		, _value(value)
@@ -37,6 +41,7 @@ struct RBTreeNode
 	{}
 };
 
+//定义一颗红黑树 
 template<typename K,typename V>
 class RBTree
 {
@@ -46,18 +51,20 @@ public:
 		:_root(NULL)
 	{}
 
-	bool Insert(const K& key, const V& value)
+	//插入函数 
+	pair<Node*,bool> Insert(const K& key, const V& value)
 	{
 		if (_root == NULL)
 		{
 			_root = new Node(key, value);
 			_root->_col = BLACK;
-			return true;
+			return make_pair(_root,true);
 		}
 
 		Node* cur = _root;
 		Node* parent = NULL;
-
+		
+		//找到插入节点的位置 
 		while (cur)
 		{
 			if (key > cur->_key)
@@ -72,12 +79,13 @@ public:
 			}
 			else
 			{
-				return false;
+				return make_pair(cur, false);
 			}
 		}
 
+		//将节点插入 
 		cur = new Node(key, value);
-		
+		Node* newNode = cur;
 		if (key < parent->_key)
 		{
 			parent->_left = cur;
@@ -88,7 +96,8 @@ public:
 			parent->_right = cur;
 			cur->_parent = parent;
 		}
-
+	
+		//循环判断是否需要调整 
 		while (parent && parent->_col == RED)
 		{
 			Node* grandfather = parent->_parent;
@@ -159,7 +168,7 @@ public:
 		}
 
 		_root->_col = BLACK;
-		return true;
+		return make_pair(newNode, true);
 	}
 
 	bool IsBalance()
@@ -186,10 +195,17 @@ public:
 		return CheckColor(_root) && CheckBlackNum(_root, k, 0);
 	}
 
+	//中序遍历 
 	void InOrder()
 	{
 		_InOrder(_root);
 		cout << endl;
+	}
+
+	//重载[]，来插入元素 
+	V& operator[](const K& key)
+	{	
+		return Insert(key, V()).first->_value;
 	}
 
 protected:
@@ -202,6 +218,7 @@ protected:
 		cout << root->_key << " ";
 		_InOrder(root->_right);
 	}
+
 	bool CheckColor(Node* root)
 	{
 		//1.空树，满足
@@ -232,6 +249,7 @@ protected:
 			&& CheckBlackNum(root->_right, k, num);
 	}
 
+	//右旋 
 	void RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
@@ -261,6 +279,7 @@ protected:
 		}
 	}
 
+	//左旋 
 	void RotateL(Node* parent)
 	{
 		Node* subR = parent->_right;
