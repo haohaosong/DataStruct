@@ -60,7 +60,7 @@ struct __VectorReverseIterator
 	{
 		return (*_node);
 	}
-	Ref operator->()
+	Ptr operator->()
 	{
 		return (*_node);
 	}
