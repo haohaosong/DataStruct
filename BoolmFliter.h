@@ -99,7 +99,7 @@ class BoolmFilter
 {
 public:
 	BoolmFilter(size_t num)
-		:_bp(num*2*1)
+		:_bp(num*2*5)
 	{}
 
 	size_t HashFunC1(const K& num)
