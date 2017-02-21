@@ -17,7 +17,6 @@ class BitMap
 public:
 	//位图的构造函数
 	BitMap(size_t size = 1024)
-		:_size(0)
 	{
 		//一个无符号整形(size_t)可以有32个位分别表示32个数
 		_v.resize(size / 32 + 1);
@@ -34,7 +33,6 @@ public:
 
 		//利用或运算，将该位置为1
 		_v[index] |= 1 << (value-1);
-		_size++;
 	}
 
 	//移出，将num的所在位置为0
@@ -48,7 +46,6 @@ public:
 
 		//利用异或运算，将该位置为0
 		_v[index] ^= 1 << (value-1);
-		_size--;
 	}
 
 	//用来判断一个数是否已经存入位图中
@@ -62,7 +59,6 @@ public:
 	}
 protected:
 	vector<size_t> _v;
-	size_t _size;
 };
 
 void TestBitMap()
