@@ -273,7 +273,7 @@ public:
 			size_t isrc = top->_src;
 			size_t ides = top->_des;
 
-			//如果造成环，则不添加此边，进行下轮循环
+			//如果没有造成环，添加此边
 			if (ufs.IsInSet(isrc, ides) == false)
 			{
 				//添加该线
@@ -281,6 +281,7 @@ public:
 				mintree._AddEdge(ides,isrc,top->_weight);
 				ufs.Union(isrc, ides);
 
+				//所有元素在一个集合里，返回true
 				if (ufs.SetSize() == 1)
 					return true;
 			}
