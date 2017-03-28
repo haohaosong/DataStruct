@@ -18,15 +18,18 @@ public:
 	Heap(T arr[], size_t n)
 		:_a(arr, arr + n)
 	{
-		for (int i = (_a.size()-2)/2; i >= 0; i--)
+		//构建堆，需要先将子树先构建成堆
+		for (int i = (_a.size() - 2) / 2; i >= 0; i--)
 		{
+			//向下调整使该树成为堆
 			_AdjustDown(i);
 		}
 	}
 
 	void Pop()
 	{
-		swap(_a[0], _a[_a.size()-1]);
+		//将根节点的值和最后一个值进行交换，再将最后一个元素不视为堆内的元素，进行向下调整
+		swap(_a[0], _a[_a.size() - 1]);
 		_a.pop_back();
 		_AdjustDown(0);
 	}
@@ -34,11 +37,13 @@ public:
 	void Push(const T& x)
 	{
 		_a.push_back(x);
-		_AdjustUp(_a.size()-1);
+		_AdjustUp(_a.size() - 1);
 	}
 protected:
 	vector<T> _a;
 protected:
+	//插入一个节点，该节点的加入可能破坏了堆的结构
+	//向上调整是使加入节点后的树继续满足堆的条件
 	void _AdjustUp(int i)
 	{
 		int child = i;
@@ -60,16 +65,21 @@ protected:
 			}
 		}
 	}
+
+	//向下调整
+	//在构建堆时，或者堆顶元素被pop时，需要向下调整
+	//1、构建堆，先将最小的子树构建成堆，慢慢将堆生长
+	//2、pop后，堆顶元素不满足堆的情况，但是其他子树是满足堆的，所以只需对堆顶元素向下调整
 	void _AdjustDown(int root)
 	{
 		int parent = root;
-		int child = 2 * parent+1;
+		int child = 2 * parent + 1;
 
 		//child不能大于节点总的个数
 		while (child<_a.size())
 		{
 			//如果右节点存在并且比左边节点大
-			if (child + 1 < _a.size() && _a[child+1] > _a[child])
+			if (child + 1 < _a.size() && _a[child + 1] > _a[child])
 			{
 				child++;
 			}
@@ -82,7 +92,7 @@ protected:
 				//父亲孩子向下走
 				parent = child;
 				child = child * 2 + 1;
-			}			
+			}
 			else
 			{
 				break;
