@@ -51,7 +51,7 @@ struct __ListIterator
 	self& operator ++()
 	{
 		_node = _node->_next;
-		return (self)_node;
+		return (self&)_node;
 	}
 	self operator ++ (int)
 	{
@@ -62,7 +62,7 @@ struct __ListIterator
 	self& operator --()
 	{
 		_node = _node->_prev;
-		return (self)_node;
+		return (self&)_node;
 	}
 	self operator -- (int)
 	{
@@ -101,7 +101,7 @@ struct __ListReverseIterator
 	{
 		_node = _node->_prev;//注意：这里是反向迭代器，++应该指向前一个
 							//这是反向迭代器最关键的地方
-		return _node;
+		return (self&)_node;
 	}
 	self operator++(int)
 	{
@@ -112,7 +112,7 @@ struct __ListReverseIterator
 	self& operator--()
 	{
 		_node = _node->_next;
-		return _node;
+		return (self&)_node;
 	}
 	self operator--(int)
 	{
